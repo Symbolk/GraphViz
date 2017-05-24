@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>  
+<html>  
+<head>  
+<meta charset="UTF-8" />  
+<title>MODEL PAGE</title>  
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+<script type="text/javascript">  
+    var Ajax = function ()  
+    {  
+        $.getJSON ("multi_edges.txt", function (data)  
+        {  
+            $.each (data, function (i, item)  
+            {  
+                $ ("#disp").append ("<h3>" + item.value + "</h3>");  
+                // $ ("#disp").append ("<p>" + item.name + "</p>");   
+            });  
+        });  
+    }  
+</script>  
+</head>  
+<body>  
+    <input type="button" value="Ajax提交" onclick="Ajax();" />  
+    <div id="disp"></div>  
+</body>  
+</html>  

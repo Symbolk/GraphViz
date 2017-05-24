@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Multiple labelled edges</title>
+    <style>
+    .link {
+        stroke: #000;
+        stroke-width: 1.5px;
+    }
+    
+    .node {
+        cursor: move;
+        fill: #ccc;
+        stroke: #000;
+        stroke-width: 1.5px;
+    }
+    
+    .node text {
+        pointer-events: none;
+        font: 10px sans-serif;
+    }
+    </style>
+</head>
+
+<body>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+    const width = window.innerWidth - 20,
+        height = window.innerHeight,
+        middle = width / 2;
+
+
+    d3.json("graph.json", function(error, graph) {
+
+        if (error) throw error;
+        let force = d3.forceSimulation()
+            .force("link", d3.forceLink().id(function(d) {
+                return d.id;
+            }).distance(100).strength(1))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(middle, middle))
+            .on("tick", tick);
+
+        let svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        force
+            .nodes(graph.nodes)
+            .force("link", d3.forceLink(graph.edges));
+
+
+        let link = svg.selectAll(".link").data(graph.edges)
+            .enter().append("line")
+            .attr("class", "link");
+
+
+        let node = svg.selectAll(".node")
+            .data(graph.nodes)
+            .enter().append("circle")
+            .attr("class", "node")
+            .attr("r", 5)
+            // .on("dblclick", dblclick)
+            .call(d3.drag()
+                .on("start", dragstart)
+                .on("drag", dragged));
+        //.on("end",dragended));
+
+        node.append("text")
+            .attr("dx", 12)
+            .attr("dy", ".35em")
+            .text(function(d) {
+                return d.name;
+            });
+
+        function tick() {
+            link.attr("x1", function(d) {
+                    return d.source.x;
+                })
+                .attr("y1", function(d) {
+                    return d.source.y;
+                })
+                .attr("x2", function(d) {
+                    return d.target.x;
+                })
+                .attr("y2", function(d) {
+                    return d.target.y;
+                });
+
+            node.attr("cx", function(d) {
+                    d.fx = d.x;
+                    return d.x;
+                })
+                .attr("cy", function(d) {
+                    d.fy = d.y;
+                    return d.y;
+                });
+        }
+
+        // function dblclick(d) {
+        //   d3.select(this).classed("fixed", d.fixed = false);
+        //   console.log("dblclick"+d.fixed);
+        // }
+
+        function dragstart(d) {
+            if (!d3.event.active) {
+                force.alphaTarget(.1).restart();
+            }
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+            // force.stop();
+            if (!d3.event.active) {
+                force.alphaTarget(0);
+            }
+            // d.fx = null;
+            // d.fy = null;
+        }
+
+    });
+    </script>

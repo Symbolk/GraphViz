@@ -1,0 +1,93 @@
+   var data = {
+        edges: [{
+            source: {
+                id: 0,
+                label: "A"
+            },
+            target: {
+                id: 1,
+                label: "B"
+            },
+            value: "12"
+        }, {
+            source: {
+                id: 0,
+                label: "A"
+            },
+            target: {
+                id: 1,
+                label: "B"
+            },
+            value: "1"
+        }, {
+            source: {
+                id: 0,
+                label: "A"
+            },
+            target: {
+                id: 1,
+                label: "B"
+            },
+            value: "01"
+        }, {
+            source: {
+                id: 1,
+                label: "B"
+            },
+            target: {
+                id: 0,
+                label: "A"
+            },
+            value: "123"
+        }, {
+            source: {
+                id: 2,
+                label: "C"
+            },
+            target: {
+                id: 0,
+                label: "A"
+            },
+            value: "1"
+        }, {
+            source: {
+                id: 2,
+                label: "C"
+            },
+            target: {
+                id: 0,
+                label: "A"
+            },
+            value: "2"
+        }, {
+            source: {
+                id: 2,
+                label: "C"
+            },
+            target: {
+                id: 0,
+                label: "A"
+            },
+            value: "23"
+        }, {
+            source: {
+                id: 2,
+                label: "C"
+            },
+            target: {
+                id: 0,
+                label: "A"
+            },
+            value: "13"
+        }, {
+            source: {
+                id: 2,
+                label: "C"
+            },
+            target: {
+                id: 0,
+                label: "A"
+            },
+            value: "123"
+        }, ]
+    };
