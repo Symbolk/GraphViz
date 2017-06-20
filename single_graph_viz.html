@@ -17,15 +17,28 @@
     fill: red;
     font: 10px sans-serif;
 }
+
+.form{
+    border:1px;
+    fill: #006600;
+}
+#graph_info {
+    /*float: left;*/
+}
+
+#node_info {
+    float:right;
+}
 </style>
 
 <body>
     <input type="file" id="json_file" name="graph_file" />
-    <form id="info_box">
+    <form id="graph_info">
     </form>
     <form id="node_info">
     </form>
     <svg id="graph" width="800" height="500"></svg>
+    </body>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
     // const width = window.innerWidth - 20,
@@ -46,7 +59,7 @@
 
         let svge = document.getElementById("graph");
         svge.innerHTML = "";
-        let info=document.getElementById("info_box");
+        let info=document.getElementById("graph_info");
         let node_info=document.getElementById("node_info");
         info.innerHTML= 'File Name: ' + file.name + '<br>' +
                      'File Size: ' + file.size + '<br>'+
@@ -83,7 +96,7 @@
                 .append("line")
                 .attr("class", "link-line");
 
-            if (json.typed == true) {
+            if (json.typed === true) {
                 link.attr("stroke", function(d) {
                     return color(d.type);
                 })

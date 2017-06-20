@@ -36,27 +36,13 @@
 </head>
 
 <body>
-    <input type="button" value="Select File" onclick="readJson();" />
+    <!-- <input type="button" value="Select File" onclick="readJson();" /> -->
 
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="multi_edges.txt"></script>
 
     <script type="text/javascript">
-
-    // let links=[];
-    // let readJson = function() {
-    //     $.getJSON("userinfo.txt", function(data) {
-    //         $.each(data, function(i, item) {
-    //             let link={"source"};
-    //             edge["id"]=item.id;
-    //             $("links").append("source" + item.name);
-    //             $("#disp").append("<p>" + item.sex + "</p>");
-    //             $("#disp").append("<p>" + item.email + "</p>");
-    //         });
-    //     });
-    // }
-
 
 
     function myGraph() {
@@ -101,6 +87,7 @@
                 if ((links[i].source.id == source.id && links[i].target.id == target.id) || (links[i].source.id == target.id && links[i].target.id == source.id))
                     count++;
             };
+            console.log(count);
             return count;
         };
 
@@ -244,8 +231,8 @@
                         let index = arcScale(d.value);
                         sweep = index <= half ? 0 : 1;
                         // console.log(arcScale(d.value));
-                        drx = drx / (1 + Math.abs((1 / siblingCount) * (index - half)));
-                        dry = dry / (1 + Math.abs((1 / siblingCount) * (index - half)));
+                        drx = drx / (1.2*(1 + Math.abs((1 / siblingCount) * (index - half))));
+                        dry = dry / (1.2*(1 + Math.abs((1 / siblingCount) * (index - half))));
 
                         return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
                     } else { // one single straight line inside
@@ -260,8 +247,8 @@
                             return "M" + x1 + "," + y1 + "L" + x2 + "," + y2;
                         } else {
                             sweep = index < half ? 0 : 1;
-                            drx = drx / (1 + Math.abs((1 / siblingCount) * (index - half)));
-                            dry = dry / (1 + Math.abs((1 / siblingCount) * (index - half)));
+                            drx = drx / (1.2*(1 + Math.abs((1 / siblingCount) * (index - half))));
+                            dry = dry / (1.2*(1 + Math.abs((1 / siblingCount) * (index - half))));
                             return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
                         }
                     }

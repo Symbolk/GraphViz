@@ -1,54 +1,66 @@
 {
     "mid": 1,
-    "clusters": [
+    "children": [
         {
             "cid": 0,
-            "nodes": [
+            "size":8000,
+            "children": [
                 {
                     "gid": 0,
-                    "nid": 0 
+                    "nid": 0,
+                    "size":800
                 },
                 {
                     "gid": 1,
-                    "nid": 1
+                    "nid": 1,
+                    "size":800
                 },
                 {
                     "gid": 2,
-                    "nid": 0
+                    "nid": 0,
+                    "size":800
                 }
             ]
         },
         {
             "cid": 1,
-            "nodes": [
+            "size":8000,
+            "children": [
                 {
                     "gid": 0,
-                    "nid": 1
+                    "nid": 1,
+                    "size":800
                 },
                 {
                     "gid": 1,
-                    "nid": 0
+                    "nid": 0,
+                    "size":800
                 },
                 {
                     "gid": 2,
-                    "nid": 1
+                    "nid": 1,
+                    "size":800
                 }
             ]
         },
         {
             "cid": 2,
-            "nodes": [
+            "size":8000,
+            "children": [
                 {
                     "gid": 0,
-                    "nid": 2
+                    "nid": 2,
+                    "size":800
                 },
                 {
                     "gid": 1,
-                    "nid": 2
+                    "nid": 2,
+                    "size":800
                 },
                 {
                     "gid": 2,
-                    "nid": 2
+                    "nid": 2,
+                    "size":800
                 }
             ]
         }

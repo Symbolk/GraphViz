@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta charset="utf-8">
+    <title>Merged Graph Viz</title>
+    <style>
+    .fileinput-button {
+        position: relative;
+        margin-top: 10px;
+        margin-left: 10px;
+        display: inline-block;
+        overflow: hidden;
+    }
+    
+    .fileinput-button input {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        opacity: 0;
+        -ms-filter: 'alpha(opacity=0)';
+        font-size: 200px;
+    }
+    
+    #graph_info {
+        width: 600px;
+        margin-top: 10px;
+        margin-left: 10px;
+        border: 2px dashed #000;
+    }
+    
+    #graph {
+        /*border: 2px dashed #000;*/
+    }
+    
+    .node {
+        cursor: pointer;
+    }
+    
+    .node circle {
+        fill: #fff;
+        stroke: black;
+        stroke-width: 0px;
+    }
+    
+    .node text {
+        font: 12px sans-serif;
+    }
+    
+    .link {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 2px;
+    }
+    </style>
+</head>
+
+<body>
+    <span class="btn btn-success fileinput-button">
+    <span>Upload a Json Graph File</span>
+    <input type="file" id="json_file" name="graph_file">
+    </span>
+    <!-- <div class="col-lg-5  pull-right"> -->
+    <div class="center-block">
+        <form id="graph_info">
+            <label>Graph Info</label>
+    </div>
+    </form>
+    </div>
+    <svg id="graph"></svg>
+</body>
+<!-- load the d3.js library -->
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+let graph_file = document.getElementById("json_file");
+graph_file.addEventListener("change", function() {
+    const file = graph_file.files[0];
+    const file_name = file.name;
+    const color20 = d3.scale.category20();
+    if (!file_name || !(file_name.endsWith('.json'))) {
+        alert('Please choose a valid json file.');
+        return;
+    }
+    let svge = document.getElementById("graph");
+    svge.innerHTML = "";
+    let info = document.getElementById("graph_info");
+    let node_info = document.getElementById("node_info");
+    info.innerHTML = 'File Name: ' + file.name + '<br>' +
+        'File Size: ' + file.size + '<br>' +
+        'Modified Date: ' + file.lastModifiedDate + '<br>';
+    d3.json(file_name, function(error, json) {
+        if (error) throw error;
+        clusters = json.clusters;
+
+        // ************** Generate the tree diagram  *****************
+        var margin = {
+                top: 200,
+                right: 120,
+                bottom: 20,
+                left: 200
+            },
+            width = window.innerWidth - margin.right - margin.left,
+            height = window.innerHeight - margin.top - margin.bottom;
+
+        var i = 0,
+            duration = 750,
+            root;
+
+        var tree = d3.layout.tree()
+            .size([height / 5, width / 5]);
+
+        var diagonal = d3.svg.diagonal()
+            .projection(function(d) {
+                return [d.x, d.y];
+            });
+
+        var svg = d3.select("svg")
+            .attr("width", width + margin.right + margin.left)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        let located_nodes = [];
+        for (let n of clusters) {
+            let cnum = clusters.length;
+            svg = svg.append("g")
+                .attr("transform", "translate(" + margin.left + ",0) rotate(" + 360 / cnum + "," + width / 10 + "," + height / 10 + ")");
+            root = n;
+            root.x0 = height / 5;
+            root.y0 = width / 5;
+            update(root);
+            located_nodes.push(root);
+        }
+        console.log(located_nodes);
+        // path.exit().remove();
+        // trying to draw the multiple edges between clusters but failed
+        // var force = d3.layout.force()
+        //     .gravity(.05)
+        //     .distance(100)
+        //     .charge(-100)
+        //     .size([width, height]);
+        let links = [];
+        json.links.forEach(e => {
+            let src = located_nodes.filter(n => {
+                return n.cid === e.source;
+            })[0];
+            let tar = located_nodes.filter(n => {
+                return n.cid === e.target;
+            })[0];
+            links.push({
+                source: src,
+                target: tar,
+                value: e.value
+            });
+        });
+        
+        let path = svg.selectAll(".line")
+            .data(links);
+        console.log(links);
+
+        path.enter().append("path")
+            .attr("class", "line")
+            // .attr('fill', None)
+            .style("stroke", "black")
+            // .attr("transform", "translate("+links[0].target.x+","+links[0].target.y+")")
+            .attr("d", function(d) {
+            // console.log(d.target.x);
+                return "M" + d.target.x + " " + d.target.y + "L" + d.source.x + " " + d.source.y;
+                // return "M" +  width / 7 + " " + height / 7  + "L" + d.target.x + " " + d.target.y;       
+            });
+        // force.nodes(json.clusters)
+        //     .links(links)
+        //     .start();
+        // var svg1 = d3.select("body").append("svg")
+        // var link = svg1.selectAll(".link")
+        //     .data(links)
+        //     .enter().append("line")
+        //     .attr("class", "link");
+
+
+        d3.select(self.frameElement).style("height", "100px");
+
+        function update(source) {
+
+            // Compute the new tree layout.
+            let nodes = tree.nodes(root).reverse(),
+                links = tree.links(nodes);
+
+            // Normalize for fixed-depth.
+            nodes.forEach(function(d) {
+                d.y = d.depth * (-90);
+            });
+
+            // Update the nodes…
+            let node = svg.selectAll("g.node")
+                .data(nodes, function(d) {
+                    return d.id || (d.id = ++i);
+                });
+
+            // Enter any new nodes at the parent's previous position.
+            let nodeEnter = node.enter().append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) {
+                    return "translate(" + source.x0 + "," + source.y0 + ")";
+                })
+                .on("click", click);
+
+            nodeEnter.append("circle")
+                .attr("r", function(d) {
+                    return d.size;
+                })
+                .style("fill", color);
+
+            nodeEnter.append("text")
+                .attr("x", function(d) {
+                    return d.children || d._children ? -13 : 13;
+                })
+                .attr("dy", ".35em")
+                .attr("text-anchor", function(d) {
+                    return d.children || d._children ? "end" : "start";
+                })
+                .text(function(d) {
+                    if (d.hasOwnProperty("cid")) {
+                        return d.cid;
+                    } else if (d.hasOwnProperty("mid")) {
+                        return d.mid;
+                    } else if (d.hasOwnProperty("nid")) {
+                        return d.nid;
+                    }
+                })
+                .style("fill-opacity", 1e-6);
+
+            // Transition nodes to their new position.
+            let nodeUpdate = node.transition()
+                .duration(duration)
+                .attr("transform", function(d) {
+                    return "translate(" + d.x + "," + d.y + ")";
+                });
+
+            nodeUpdate.select("circle")
+                .attr("r", d => {
+                    return d.size;
+                })
+                .style("fill", color);
+
+            nodeUpdate.select("text")
+                .style("fill-opacity", 1);
+
+            // Transition exiting nodes to the parent's new position.
+            let nodeExit = node.exit().transition()
+                .duration(duration)
+                .attr("transform", function(d) {
+                    return "translate(" + source.x + "," + source.y + ")";
+                })
+                .remove();
+
+            nodeExit.select("circle")
+                .attr("r", d => {
+                    return d.size;
+                });
+
+            nodeExit.select("text")
+                .style("fill-opacity", 1e-6);
+
+            // let node = svg.selectAll(".node");
+            // let link = svg.selectAll(".link")
+            //              .data(links, function(d) {
+            //     return d.target.id;
+            // });
+
+            // link.exit().remove();
+
+            // link.enter().insert("line", ".node")
+            //     .attr("class", "link");
+            // Update the links…
+            let link = svg.selectAll("path.link")
+                .data(links, function(d) {
+                    return d.target.id;
+                });
+
+            // Enter any new links at the parent's previous position.
+            link.enter().insert("path", "g")
+                .attr("class", "link")
+                .attr("d", function(d) {
+                    let o = {
+                        x: source.x0,
+                        y: source.y0
+                    };
+                    return diagonal({
+                        source: o,
+                        target: o
+                    });
+                });
+
+            // Transition links to their new position.
+            link.transition()
+                .duration(duration)
+                .attr("d", diagonal);
+
+            // Transition exiting nodes to the parent's new position.
+            link.exit().transition()
+                .duration(duration)
+                .attr("d", function(d) {
+                    let o = {
+                        x: source.x,
+                        y: source.y
+                    };
+                    return diagonal({
+                        source: o,
+                        target: o
+                    });
+                })
+                .remove();
+
+            // Stash the old positions for transition.
+            nodes.forEach(function(d) {
+                d.x0 = d.x;
+                d.y0 = d.y;
+            });
+        }
+
+        // Toggle children on click.
+        function click(d) {
+            if (d.children) {
+                d._children = d.children;
+                d.children = null;
+            } else {
+                d.children = d._children;
+                d._children = null;
+            }
+            update(d);
+        }
+
+        function color(d) {
+            return d._children ? "red" // collapsed package
+                : d.children ? "black" // expanded package
+                : colores_google(d.gid); // leaf node
+        }
+
+        function colores_google(n) {
+            var colores_g = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+            return colores_g[n % colores_g.length];
+        }
+
+    });
+});
+</script>
+
+</html>

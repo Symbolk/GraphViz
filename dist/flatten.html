@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+
+d3.json("mgraph.json", function(error, json) {
+  if (error) throw error;
+  let nodes,links=flatten(json);
+   console.log(nodes); console.log(links);
+  //flatten the merged graph data into 2 arrays
+  function flatten(json){
+    let nodes=[];
+    let links=[];
+    let i=0;
+    //flatten the nodes
+    let clusters=json.clusters;
+    for(let c of clusters){
+        let cluster={};
+        cluster["id"]=i++;
+        cluster["cid"]=c["cid"];
+        cluster["size"]=16;
+        nodes.push(cluster);
+    }
+    for(let c of clusters){
+        for(let n of c.nodes){
+          let node={};
+          let sid=i++;
+          node["id"]=sid;
+          node["nid"]=n["nid"];
+          node["gid"]=n["gid"];
+          node["size"]=1;
+          nodes.push(node);
+          let link={};
+          link["lid"]=-1;
+          link["source"]=sid;
+          link["target"]=c["cid"];
+          links.push(link);
+        }
+    }
+    //flatten the edges/links
+    let edges=json.links;
+    for(let e of edges){
+      let link={};
+      link["lid"]=e["lid"];
+      link["source"]=e["source"];
+      link["target"]=e["target"];
+      link["label"]=e["label"];
+      links.push(link);
+    }
+
+
+ return [nodes, links];
+  }
+
+});
+</script>

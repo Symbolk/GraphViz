@@ -1,0 +1,237 @@
+{
+    "mid": 0,
+    "clusters": [{
+        "cid": 0,
+        "size": 10,
+        "nodes": [{
+            "gid": 0,
+            "nid": 0,
+            "size": 4
+        }]
+    }, {
+        "cid": 1,
+        "size": 10,
+        "nodes": [{
+            "gid": 0,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 1,
+            "nid": 1,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }]
+    }, {
+        "cid": 2,
+        "size": 10,
+        "nodes": [{
+            "gid": 0,
+            "nid": 1,
+            "size": 4
+        }, {
+            "gid": 1,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 1,
+            "size": 4
+        }]
+    }, {
+        "cid": 3,
+        "size": 10,
+        "nodes": [{
+            "gid": 0,
+            "nid": 2,
+            "size": 4
+        }, {
+            "gid": 1,
+            "nid": 2,
+            "size": 4
+        }]
+    }, {
+        "cid": 4,
+        "size": 10,
+        "nodes": [{
+            "gid": 0,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 1,
+            "nid": 1,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }]
+    }, {
+        "cid": 5,
+        "size": 10,
+        "nodes": [{
+            "gid": 0,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 1,
+            "nid": 1,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }]
+    }, {
+        "cid": 6,
+        "size": 10,
+        "nodes": [{
+            "gid": 0,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 1,
+            "nid": 1,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }]
+    }, {
+        "cid": 7,
+        "size": 10,
+        "nodes": [{
+            "gid": 0,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 1,
+            "nid": 1,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }, {
+            "gid": 2,
+            "nid": 0,
+            "size": 4
+        }]
+    }],
+    "links": [{
+        "lid": 0,
+        "source": 0,
+        "target": 1,
+        "label": "地质大学"
+    }, {
+        "lid": 1,
+        "source": 0,
+        "target": 1,
+        "label": "中科大"
+    },
+    {
+        "lid": 3,
+        "source": 0,
+        "target": 1,
+        "label": "人民大学"
+    }, 
+    {
+        "lid": 4,
+        "source": 0,
+        "target": 1,
+        "label": "北航大学"
+    }, {
+        "lid": 2,
+        "source": 0,
+        "target": 2,
+        "label": "13-20"
+    }, {
+        "lid": 5,
+        "source": 1,
+        "target": 3,
+        "label": "软件工程"
+    }, {
+        "lid": 6,
+        "source": 1,
+        "target": 4,
+        "label": "信科计算机系"
+    }, {
+        "lid": 7,
+        "source": 0,
+        "target": 2,
+        "label": "编程语言信算机系"
+    }, {
+        "lid": 8,
+        "source": 0,
+        "target": 6,
+        "label": "编程计算机系"
+    }, {
+        "lid": 9,
+        "source": 2,
+        "target": 0,
+        "label": "信科计算机系"
+    }, {
+        "lid": 10,
+        "source": 0,
+        "target": 7,
+        "label": "信科"
+    },
+ {
+        "lid": 11,
+        "source": 5,
+        "target": 6,
+        "label": "编程语言信"
+    },
+{
+        "lid": 11,
+        "source": 5,
+        "target": 1,
+        "label": "编程语言信系"
+    },{
+        "lid": 12,
+        "source": 2,
+        "target": 0,
+        "label": "北京大学"
+    },
+{
+        "lid": 13,
+        "source": 2,
+        "target": 0,
+        "label": "清华大学"
+    }]
+}

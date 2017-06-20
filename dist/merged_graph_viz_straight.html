@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<style type="text/css">
+.fileinput-button {
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10px;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.fileinput-button input {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px;
+}
+
+#graph_info {
+    width: 600px;
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 2px dashed #000;
+}
+
+.link line {
+    stroke: #696969;
+}
+
+.link line.separator {
+    stroke: #fff;
+    stroke-width: 1px;
+}
+
+.node circle {
+    stroke: #000;
+    stroke-width: 1px;
+}
+
+.node text {
+    font: 10px sans-serif;
+    pointer-events: none;
+}
+
+
+/*path.link { fill: none; stroke: #000000; stroke-width: 1px; } path.invis { fill: none; stroke-width: 0; }
+*/
+</style>
+
+<body>
+    <span class="btn btn-success fileinput-button">
+    <span>Upload a Json Graph File</span>
+    <input type="file" id="json_file" name="graph_file">
+    </span>
+    <!-- <div class="col-lg-5  pull-right"> -->
+    <div class="center-block">
+        <form id="graph_info">
+            <label>Graph Info</label>
+    </div>
+    </form>
+    </div>
+    <svg id="graph"></svg>
+</body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+var width = 960,
+    height = 600;
+
+var color = d3.scale.category20();
+
+var radius = d3.scale.sqrt()
+    .range([0, 6]);
+
+var svg = d3.select("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var force = d3.layout.force()
+    .size([width, height])
+    .charge(-400)
+    // .linkDistance(200)
+    .linkDistance(function(d) {
+        return radius(d.source.size) + radius(d.target.size) + 40;
+    });
+let graph_file = document.getElementById("json_file");
+graph_file.addEventListener("change", function() {
+    const file = graph_file.files[0];
+    const file_name = file.name;
+    const color20 = d3.scale.category20();
+    if (!file_name || !(file_name.endsWith('.json'))) {
+        alert('Please choose a valid json file.');
+        return;
+    }
+    let svge = document.getElementById("graph");
+    svge.innerHTML = "";
+    let info = document.getElementById("graph_info");
+    let node_info = document.getElementById("node_info");
+    info.innerHTML = 'File Name: ' + file.name + '<br>' +
+        'File Size: ' + file.size + '<br>' +
+        'Modified Date: ' + file.lastModifiedDate + '<br>';
+    d3.json(file_name, function(error, json) {
+        if (error) throw error;
+
+        var returned = flatten(json);
+
+        var graph = returned[0];
+        var cclinks = returned[1];
+        console.log(cclinks);
+        force
+            .nodes(graph.nodes)
+            .links(graph.links)
+            .on("tick", tick)
+            .start();
+
+        var link = svg.selectAll(".link")
+            .data(graph.links)
+            .enter().append("g")
+            .attr("class", "link");
+
+        link.append("line")
+            .style("stroke-width", function(d) {
+                return (d.count * 2 - 1) * 2 + "px";
+            });
+
+
+        // .style("stroke-width", function(d) { return (d.count * 2 - 1) * 2 + "px"; });
+        link.filter(function(d) {
+                return d.count > 1;
+            }).append("line")
+            .attr("class", "separator");
+
+        let node = svg.selectAll(".node")
+            .data(graph.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .call(force.drag);
+
+        node.append("circle")
+            .attr("r", function(d) {
+                return radius(d.size);
+            })
+            .style("fill", function(d) {
+                return color(d.cid);
+            });
+
+        node.append("text")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .text(function(d) {
+                return d.hasOwnProperty("cid") ? d.cid : d.nid;
+            });
+
+        function tick() {
+            link.selectAll("line")
+                .attr("x1", function(d) {
+                    return d.source.x;
+                })
+                .attr("y1", function(d) {
+                    return d.source.y;
+                })
+                .attr("x2", function(d) {
+                    return d.target.x;
+                })
+                .attr("y2", function(d) {
+                    return d.target.y;
+                });
+
+            node.attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+        }
+
+        function countSiblingLinks(source, target) {
+            let count = 0;
+                        console.log(count);
+            // let links=graph.links;
+            for (let i = 0; i < cclinks.length; ++i) {
+                if ((cclinks[i].source.id == source.id && cclinks[i].target.id == target.id) || (cclinks[i].source.id == target.id && cclinks[i].target.id == source.id))
+                    count++;
+            };
+            console.log(count);
+            return count;
+        };
+
+        function getSiblingLinks(source, target) {
+            let siblings = [];
+            for (let i = 0; i < cclinks.length; ++i) {
+                if ((cclinks[i].source.id == source.id && cclinks[i].target.id == target.id) || (cclinks[i].source.id == target.id && cclinks[i].target.id == source.id))
+                    siblings.push(cclinks[i].label);
+            };
+            return siblings;
+        };
+
+        function arcPath(leftHand, d) {
+            let x1 = leftHand ? d.source.x : d.target.x,
+                y1 = leftHand ? d.source.y : d.target.y,
+                x2 = leftHand ? d.target.x : d.source.x,
+                y2 = leftHand ? d.target.y : d.source.y,
+                dx = x2 - x1,
+                dy = y2 - y1,
+                dr = Math.sqrt(dx * dx + dy * dy),
+                drx = dr,
+                dry = dr,
+                // sweep = leftHand ? 0 : 1;
+                siblingCount = countSiblingLinks(d.source, d.target),
+                xRotation = 0,
+                largeArc = 0;
+
+            if (siblingCount > 1) {
+                if (siblingCount % 2 === 0) { // symmetrical
+                    let siblings = getSiblingLinks(d.source, d.target);
+                    let half = siblingCount / 2;
+                    // console.log(half);
+                    let arcScale = d3.scale.ordinal()
+                        .domain(siblings)
+                        .rangePoints([1, siblingCount]);
+                    let index = arcScale(d.label);
+                    let sweep = index <= half ? 0 : 1;
+                    // console.log(arcScale(d.label));
+                    drx = drx / (1 + Math.abs((1 / siblingCount) * (index - half)));
+                    dry = dry / (1 + Math.abs((1 / siblingCount) * (index - half)));
+
+                    return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
+                } else { // one single straight line inside
+                    let siblings = getSiblingLinks(d.source, d.target);
+
+                    let half = siblingCount / 2 + 0.5;
+                    let arcScale = d3.scale.ordinal()
+                        .domain(siblings)
+                        .rangePoints([1, siblingCount]);
+                    let index = arcScale(d.label);
+                    if (index === half) {
+                        // draw a stright line
+                        return "M" + x1 + "," + y1 + "L" + x2 + "," + y2;
+                    } else {
+                        sweep = index < half ? 0 : 1;
+                        drx = drx / (1 + Math.abs((1 / siblingCount) * (index - half)));
+                        dry = dry / (1 + Math.abs((1 / siblingCount) * (index - half)));
+                        return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
+                    }
+                }
+            }
+        }
+
+        function flatten(json) {
+            let graph = {};
+            let nodes = [];
+            let links = [];
+            let clinks = [];
+            let i = 0;
+            //flatten the nodes
+            let clusters = json.clusters;
+            for (let c of clusters) {
+                let cluster = {};
+                cluster["id"] = i++;
+                cluster["cid"] = c["cid"];
+                cluster["size"] = 16;
+                nodes.push(cluster);
+            }
+
+            //flatten the edges/links
+            let edges = json.links;
+            for (let e of edges) {
+                let link = {};
+                link["lid"] = e["lid"];
+                link["source"] = e["source"];
+                link["target"] = e["target"];
+                link["label"] = e["label"];
+                links.push(link);
+                clinks.push(link);
+            }
+            // console.log(clinks);
+
+            console.log(clinks);
+            for (let l of links) {
+                let count = countSiblingLinks(l["source"], l["target"]);
+                l["count"] = count;
+                console.log(count);
+            }
+
+            for (let c of clusters) {
+                for (let n of c.nodes) {
+                    let node = {};
+                    let sid = i++;
+                    node["id"] = sid;
+                    node["nid"] = n["nid"];
+                    node["gid"] = n["gid"];
+                    node["size"] = 1;
+                    nodes.push(node);
+                    let link = {};
+                    link["lid"] = -1;
+                    link["source"] = sid;
+                    link["target"] = c["cid"];
+                    links.push(link);
+                }
+            }
+            graph["nodes"] = nodes;
+            graph["links"] = links;
+
+            return [graph, clinks];
+        }
+    });
+});
+</script>
