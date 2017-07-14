@@ -1,48 +1,48 @@
 {
-        "gid": 0,
-        "gname": "society",
-        "directed": true,
-        "typed": false,
-        "nodes": [{
-            "nid": 0,
-            "type": "Boy",
-            "name": "John"
-        }, {
-            "nid": 1,
-            "type": "Computer",
-            "name": "Macbook"
-        }, {
-            "nid": 2,
-            "type": "Girl",
-            "name": "Jessie"},
-        {
-            "nid": 3,
-            "type": "Dog",
-            "name": "Bob"
-        }],
-        "edges": [{
-            "eid": 0,
-            "source": 0,
-            "target": 1,
-            "type": "",
-            "name": "have"
-        }, {
-            "eid": 1,
-            "source": 1,
-            "target": 2,
-            "type": "",
-            "name": "have"
-        }, {
-            "eid": 2,
-            "source": 0,
-            "target": 2,
-            "type": "",
-            "name": "love"
-        },{
-            "eid": 3,
-            "source": 0,
-            "target": 3,
-            "type": "",
-            "name": "have"
-        }]
-    }
+    "gid": 0,
+    "gname": "society",
+    "directed": true,
+    "typed": false,
+    "nodes": [{
+        "nid": 0,
+        "type": "Boy",
+        "name": "John"
+    }, {
+        "nid": 1,
+        "type": "Computer",
+        "name": "Macbook"
+    }, {
+        "nid": 2,
+        "type": "Girl",
+        "name": "Jessie"
+    }, {
+        "nid": 3,
+        "type": "Dog",
+        "name": "Bob"
+    }],
+    "edges": [{
+        "eid": 0,
+        "source": 0,
+        "target": 1,
+        "type": "",
+        "name": "have"
+    }, {
+        "eid": 1,
+        "source": 1,
+        "target": 2,
+        "type": "",
+        "name": "have"
+    }, {
+        "eid": 2,
+        "source": 0,
+        "target": 2,
+        "type": "",
+        "name": "love"
+    }, {
+        "eid": 3,
+        "source": 0,
+        "target": 3,
+        "type": "",
+        "name": "have"
+    }]
+}
