@@ -1,0 +1,76 @@
+{
+    "mid": 0,
+    "clusters":[{
+    "cid": 0,
+    "size": 10,
+    "children": [{
+        "gid": 0,
+        "nid": 0,
+        "size": 4
+    }, {
+        "gid": 1,
+        "nid": 1,
+        "size": 4
+    }, {
+        "gid": 2,
+        "nid": 0,
+        "size": 4
+    }, {
+        "gid": 2,
+        "nid": 0,
+        "size": 4
+    }]
+}, {
+    "cid": 1,
+    "size": 10,
+    "children": [{
+        "gid": 0,
+        "nid": 1,
+        "size": 4
+    }, {
+        "gid": 1,
+        "nid": 0,
+        "size": 4
+    }, {
+        "gid": 2,
+        "nid": 1,
+        "size": 4
+    }]
+}, {
+    "cid": 2,
+    "size": 10,
+    "children": [{
+        "gid": 0,
+        "nid": 2,
+        "size": 4
+    }, {
+        "gid": 1,
+        "nid": 2,
+        "size": 4
+    }]
+}, {
+    "cid": 3,
+    "size": 10,
+    "children": [{
+        "gid": 0,
+        "nid": 0,
+        "size": 4
+    }, {
+        "gid": 1,
+        "nid": 1,
+        "size": 4
+    }, {
+        "gid": 2,
+        "nid": 0,
+        "size": 4
+    }, {
+        "gid": 4,
+        "nid": 0,
+        "size": 4
+    }, {
+        "gid": 3,
+        "nid": 0,
+        "size": 4
+    }]
+}]
+}

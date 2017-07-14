@@ -1,0 +1,37 @@
+{
+        "gid": 0,
+        "gname": "society",
+        "directed": true,
+        "typed": true,
+        "nodes": [{
+            "nid": 0,
+            "type": "Boy",
+            "name": "John"
+        }, {
+            "nid": 1,
+            "type": "Sport",
+            "name": "Badminton"
+        }, {
+            "nid": 2,
+            "type": "Girl",
+            "name": "Jessie"}],
+        "edges": [{
+            "eid": 0,
+            "source": 0,
+            "target": 1,
+            "type": "",
+            "name": "AB"
+        }, {
+            "eid": 1,
+            "source": 1,
+            "target": 2,
+            "type": "",
+            "name": "BC"
+        }, {
+            "eid": 2,
+            "source": 0,
+            "target": 2,
+            "type": "",
+            "name": "AC"
+        }]
+    }
