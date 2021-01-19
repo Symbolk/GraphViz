@@ -2,10 +2,7 @@
 
 ---
 
-**A simple but practical graph visualization tool.**
-
-_Powered By [@Symbolk](http://www.symbolk.com)_
-
+**A simple yet practical graph visualization tool.**
 
 
 ---
@@ -14,7 +11,7 @@ _Powered By [@Symbolk](http://www.symbolk.com)_
 
 Please format your graph data according to the following specifications before you throw it into the tool:
 
-###Single Graph Format(For normal graph)
+### Single Graph Format(For normal graph)
 ```json
 
 {
@@ -69,7 +66,7 @@ See examples in /data.
 Throw your json graph data into the html page in /release, your graph should be visualized like this:
 
 
-###Single Graph Format(For normal graph)
+### Single Graph Format(For normal graph)
 
 ![single_graph](https://github.com/Symbolk/GraphViz/blob/master/screenshots/single_graph.jpg)
 
